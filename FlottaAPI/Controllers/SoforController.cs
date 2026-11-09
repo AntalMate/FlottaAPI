@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using FlottaAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace FlottaAPI.Controllers
 {
@@ -110,6 +111,26 @@ namespace FlottaAPI.Controllers
 
                 return StatusCode(500, "Hiba: " + ex.Message);
 
+            }
+        }
+
+        //adott sofor milyen jarmuveket vezetett?
+        [HttpGet("SoforJarmu/{id}")]
+        public IActionResult SoforJarmu(int id)
+        {
+            try
+            {
+                Sofor vane= _context.Sofors.FirstOrDefault(s =>s.Id == id);
+                if(vane == null)
+                {
+                    return NotFound("Nincs ilyen sofőr");
+                }
+                var result=_context.Kikuldottjarmus.Where(j => j.SoforNavigation.Id==id).Select(j => j.Gepjarmu).ToList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Hiba " + ex.Message);
             }
         }
     }
