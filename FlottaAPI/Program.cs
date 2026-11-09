@@ -1,6 +1,7 @@
 
 using FlottaAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace FlottaAPI
 {
@@ -15,7 +16,7 @@ namespace FlottaAPI
                 options.UseMySql(connstr, ServerVersion.AutoDetect(connstr));
             });
 
-
+            builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
             // Add services to the container.
 
             builder.Services.AddControllers();
